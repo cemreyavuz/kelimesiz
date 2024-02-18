@@ -4,7 +4,7 @@ export type CharacterStatus = "default" | "green" | "yellow";
 
 export const CHARACTER_BOX_SIZE = 48;
 
-const CHARACTER_STATUS_COLOR: Record<CharacterStatus, string> = {
+export const CHARACTER_STATUS_COLOR: Record<CharacterStatus, string> = {
   default: "darkgray",
   green: "#25952d",
   yellow: "#ddcc4f",

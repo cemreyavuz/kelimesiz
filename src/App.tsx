@@ -3,7 +3,7 @@ import { useCallback, useEffect } from "react";
 import Keyboard from 'react-simple-keyboard';
 import 'react-simple-keyboard/build/css/index.css';
 import styled, { createGlobalStyle } from "styled-components";
-import { CharacterStatus } from "./components/character-box/CharacterBox";
+import { CHARACTER_STATUS_COLOR, CharacterStatus } from "./components/character-box/CharacterBox";
 import {
   CharacterGrid,
   CharacterGridWord,
@@ -85,6 +85,27 @@ const getInputStatus = (input: string, length: number): CharacterGridWord => {
   return status;
 };
 
+const getKeyboardButtonStates = (words: CharacterGridWord[]) => {
+  const buttonStates: Record<string, CharacterStatus> = {};
+
+  words.forEach(({ characters }) => {
+    characters.forEach(({ character, status }) => {
+      if (status === "green") {
+        buttonStates[character] = "green";
+      } else if (status === "yellow" && buttonStates[character] !== "green") {
+        buttonStates[character] = "yellow";
+      } else if (
+        (status === "default" && buttonStates[character] !== "green") ||
+        buttonStates[character] !== "yellow"
+      ) {
+        buttonStates[character] = "default";
+      }
+    });
+  });
+
+  return Object.entries(buttonStates);
+};
+
 export const App = (): JSX.Element => {
   const {
     input,
@@ -96,6 +117,8 @@ export const App = (): JSX.Element => {
     setIsGameFinished,
     setSubmitted,
   } = useGameState(6);
+
+  const keyboardButtonStates = getKeyboardButtonStates(submitted);
 
   const toast = useToast();
 
@@ -173,6 +196,8 @@ export const App = (): JSX.Element => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown, isGameFinished]);
+  
+  console.log(keyboardButtonStates);
 
   return (
     <Container>
@@ -200,6 +225,10 @@ export const App = (): JSX.Element => {
               class: "enter-key",
               buttons: "↵",
             },
+            ...keyboardButtonStates.map(([character, status]) => ({
+              class: `wordless-key wordless-key-${status}`,
+              buttons: `${character.toLocaleUpperCase("tr")}`,
+            })),
           ]}
           layout={{
             default: [
@@ -255,6 +284,18 @@ const KeyboardContainer = styled.div`
 
   .enter-key {
     width: 48px !important;
+  }
+
+  .wordless-key-green {
+    background-color: ${CHARACTER_STATUS_COLOR["green"]};
+  }
+
+  .wordless-key-yellow {
+    background-color: ${CHARACTER_STATUS_COLOR["yellow"]};
+  }
+
+  .wordless-key-default {
+    background-color: ${CHARACTER_STATUS_COLOR["default"]};
   }
 `;
 

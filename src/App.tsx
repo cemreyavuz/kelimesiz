@@ -126,7 +126,14 @@ export const App = (): JSX.Element => {
 
   const handleKeyInput = useCallback(
     (key: string) => {
-      if (TURKISH_CHARACTERS.includes(key) && input.length < targetWord.length) {
+      if (isGameFinished) {
+        return;
+      }
+
+      if (
+        TURKISH_CHARACTERS.includes(key) &&
+        input.length < targetWord.length
+      ) {
         setInput(input + key);
         return;
       }
@@ -141,7 +148,9 @@ export const App = (): JSX.Element => {
           setSubmitted(submitted.concat(getInputResult(input, targetWord)));
           setInput("");
 
-          if (input.toLocaleLowerCase("tr") === targetWord.toLocaleLowerCase("tr")) {
+          if (
+            input.toLocaleLowerCase("tr") === targetWord.toLocaleLowerCase("tr")
+          ) {
             setIsGameFinished(true);
             toast({
               title: `You found the answer: "${input}"`,
@@ -162,7 +171,16 @@ export const App = (): JSX.Element => {
 
       return;
     },
-    [input, setIsGameFinished, setInput, setSubmitted, submitted, targetWord, toast]
+    [
+      input,
+      isGameFinished,
+      setIsGameFinished,
+      setInput,
+      setSubmitted,
+      submitted,
+      targetWord,
+      toast,
+    ]
   );
 
   const handleKeyDown = useCallback(
@@ -188,9 +206,7 @@ export const App = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (!isGameFinished) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);

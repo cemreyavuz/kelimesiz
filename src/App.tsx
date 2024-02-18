@@ -229,17 +229,6 @@ export const App = (): JSX.Element => {
         columns={targetWord.length}
         words={[...submitted, ...(!isGameFinished ? [currentWord] : [])]}
       />
-      <ButtonContainer>
-        {isGameFinished ? (
-          <Button colorScheme="green" onClick={resetGameState}>
-            New game
-          </Button>
-        ) : (
-          <Button color="black" rightIcon={<MdOutlineRestartAlt />}>
-            Restart
-          </Button>
-        )}
-      </ButtonContainer>
       <KeyboardContainer>
         <Keyboard
           buttonTheme={[
@@ -266,6 +255,17 @@ export const App = (): JSX.Element => {
           onKeyPress={handleKeyPress}
         />
       </KeyboardContainer>
+      <ButtonContainer>
+        {isGameFinished ? (
+          <Button colorScheme="green" onClick={resetGameState}>
+            New game
+          </Button>
+        ) : (
+          <Button color="black" rightIcon={<MdOutlineRestartAlt />} onClick={resetGameState}>
+            Restart
+          </Button>
+        )}
+      </ButtonContainer>
     </Container>
   );
 };

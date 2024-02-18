@@ -8,7 +8,9 @@ import { CharacterStatus } from "./components/character-box/CharacterBox";
 import { getTodaysWord, isValidWord } from "./utils/word";
 import { useToast } from "@chakra-ui/react";
 
-const WORD = getTodaysWord(6);
+const WORD = getTodaysWord(6).toLocaleLowerCase('tr');
+
+console.log(WORD);
 
 const TURKISH_CHARACTERS = [
   "a",
@@ -42,30 +44,31 @@ const TURKISH_CHARACTERS = [
   "z",
 ];
 
-const getCharacterStatus = (
-  input: string,
-  word: string,
-  index: number
-): CharacterStatus => {
-  const sourceCharacter = input.charAt(index);
-  const targetCharacter = word.charAt(index);
+const getInputResult = (input: string, word: string): CharacterGridWord => {
+  const statuses: CharacterStatus[] = new Array(word.length).fill(0).map(() => 'default');
 
-  if (sourceCharacter === targetCharacter) {
-    return "green";
+  const secondPassWordSet = [];
+
+  for (let i = 0; i < word.length; i += 1) {
+    if (input[i] === word[i]) {
+      statuses[i] = 'green';
+    } else {
+      secondPassWordSet.push(word[i]);
+    }
   }
 
-  // if (word.includes(sourceCharacter)) {
-  //   return 'yellow';
-  // }
-
-  return "default";
-};
-
-const getInputResult = (input: string, word: string): CharacterGridWord => {
+  for (let i = 0; i < word.length; i += 1) {
+    if (statuses[i] === 'default') {
+      if (secondPassWordSet.includes(input[i])) {
+        statuses[i] = "yellow";
+      }
+    }
+  }
+  
   const result: CharacterGridWord = {
     characters: new Array(word.length).fill(0).map((_, index) => ({
-      character: input.charAt(index),
-      status: getCharacterStatus(input, word, index),
+      character: input[index],
+      status: statuses[index],
     })),
   };
 

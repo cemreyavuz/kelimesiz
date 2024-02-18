@@ -17,7 +17,7 @@ jobs:
           command: 'yarn build'
       - run:
           name: 'Upload files'
-          command: 'scp -r ./dist/* $USER@$IP:/$TARGET_PATH'
+          command: 'scp -oStrictHostKeyChecking=no -r ./dist/* $USER@$IP:/$TARGET_PATH'
       - run:
           name: 'Restart server'
           command: 'ssh -oStrictHostKeyChecking=no -v $USER@$IP "$DEPLOY_SCRIPT_TAG"'

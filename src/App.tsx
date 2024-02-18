@@ -258,9 +258,9 @@ export const App = (): JSX.Element => {
           ]}
           layout={{
             default: [
-              "Q W E R T Y U I O P Ğ Ü ←",
+              "E R T Y U I O P Ğ Ü ←",
               "A S D F G H J K L Ş İ",
-              "Z X C V B N M Ö Ç ↵",
+              "Z C V B N M Ö Ç ↵",
             ],
           }}
           onKeyPress={handleKeyPress}
@@ -302,6 +302,8 @@ const KeyboardContainer = styled.div`
   .hg-button {
     background-color: #ededed;
     border-radius: 4px;
+    box-shadow: none;
+    border: none;
     font-size: 14px;
     font-weight: 600;
   }

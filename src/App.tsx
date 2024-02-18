@@ -226,7 +226,7 @@ export const App = (): JSX.Element => {
               buttons: "↵",
             },
             ...keyboardButtonStates.map(([character, status]) => ({
-              class: `worthless-key worthless-key-${status}`,
+              class: `kelimesiz-key kelimesiz-key-${status}`,
               buttons: `${character.toLocaleUpperCase("tr")}`,
             })),
           ]}
@@ -286,15 +286,15 @@ const KeyboardContainer = styled.div`
     width: 48px !important;
   }
 
-  .worthless-key-green {
+  .kelimesiz-key-green {
     background-color: ${CHARACTER_STATUS_COLOR["green"]};
   }
 
-  .worthless-key-yellow {
+  .kelimesiz-key-yellow {
     background-color: ${CHARACTER_STATUS_COLOR["yellow"]};
   }
 
-  .worthless-key-default {
+  .kelimesiz-key-default {
     background-color: ${CHARACTER_STATUS_COLOR["default"]};
   }
 `;

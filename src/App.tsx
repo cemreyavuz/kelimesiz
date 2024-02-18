@@ -1,15 +1,19 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
-import Keyboard from 'react-simple-keyboard';
-import 'react-simple-keyboard/build/css/index.css';
+import Keyboard from "react-simple-keyboard";
+import "react-simple-keyboard/build/css/index.css";
 import styled, { createGlobalStyle } from "styled-components";
-import { CHARACTER_STATUS_COLOR, CharacterStatus } from "./components/character-box/CharacterBox";
+import {
+  CHARACTER_STATUS_COLOR,
+  CharacterStatus,
+} from "./components/character-box/CharacterBox";
 import {
   CharacterGrid,
   CharacterGridWord,
 } from "./components/character-grid/CharacterGrid";
 import { useGameState } from "./utils/game";
 import { isValidWord } from "./utils/word";
+import { MdOutlineRestartAlt } from "react-icons/md";
 
 const TURKISH_CHARACTERS = [
   "a",
@@ -44,26 +48,28 @@ const TURKISH_CHARACTERS = [
 ];
 
 const getInputResult = (input: string, word: string): CharacterGridWord => {
-  const statuses: CharacterStatus[] = new Array(word.length).fill(0).map(() => 'default');
+  const statuses: CharacterStatus[] = new Array(word.length)
+    .fill(0)
+    .map(() => "default");
 
   const secondPassWordSet = [];
 
   for (let i = 0; i < word.length; i += 1) {
     if (input[i] === word[i]) {
-      statuses[i] = 'green';
+      statuses[i] = "green";
     } else {
       secondPassWordSet.push(word[i]);
     }
   }
 
   for (let i = 0; i < word.length; i += 1) {
-    if (statuses[i] === 'default') {
+    if (statuses[i] === "default") {
       if (secondPassWordSet.includes(input[i])) {
         statuses[i] = "yellow";
       }
     }
   }
-  
+
   const result: CharacterGridWord = {
     characters: new Array(word.length).fill(0).map((_, index) => ({
       character: input[index],
@@ -192,14 +198,14 @@ export const App = (): JSX.Element => {
 
   const handleKeyPress = useCallback(
     (button: string) => {
-      let key = button.toLocaleLowerCase('tr');
+      let key = button.toLocaleLowerCase("tr");
 
-      if (key === '↵') {
-        key = 'enter';
-      } else if (key === '←') {
-        key = 'backspace';
+      if (key === "↵") {
+        key = "enter";
+      } else if (key === "←") {
+        key = "backspace";
       }
-      
+
       handleKeyInput(key);
     },
     [handleKeyInput]
@@ -212,7 +218,7 @@ export const App = (): JSX.Element => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown, isGameFinished]);
-  
+
   console.log(keyboardButtonStates);
 
   return (
@@ -224,9 +230,13 @@ export const App = (): JSX.Element => {
         words={[...submitted, ...(!isGameFinished ? [currentWord] : [])]}
       />
       <ButtonContainer>
-        {isGameFinished && (
-          <Button color="black" onClick={resetGameState}>
+        {isGameFinished ? (
+          <Button colorScheme="green" onClick={resetGameState}>
             New game
+          </Button>
+        ) : (
+          <Button color="black" rightIcon={<MdOutlineRestartAlt />}>
+            Restart
           </Button>
         )}
       </ButtonContainer>
@@ -273,6 +283,8 @@ const Container = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  display: flex;
+  gap: 24px;
   height: 40px;
 `;
 

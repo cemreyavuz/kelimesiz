@@ -28,7 +28,7 @@ const generateInitialGameState = (length: number): GameState => {
 
 export const useGameState = (length: number): MutableGameState => {
   const [value, setValue] = useLocalStorage(
-    `wordlesstr-game-${length}`,
+    `worthless-game-${length}`,
     generateInitialGameState(length)
   );
 

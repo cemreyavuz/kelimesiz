@@ -16,6 +16,7 @@
     "framer-motion": "^11.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-simple-keyboard": "^3.7.84",
     "styled-components": "^6.1.8",
     "usehooks-ts": "^2.14.0"
   },

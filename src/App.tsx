@@ -1,5 +1,7 @@
 import { Button, useToast } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
+import Keyboard from 'react-simple-keyboard';
+import 'react-simple-keyboard/build/css/index.css';
 import styled, { createGlobalStyle } from "styled-components";
 import { CharacterStatus } from "./components/character-box/CharacterBox";
 import {
@@ -99,10 +101,8 @@ export const App = (): JSX.Element => {
 
   const currentWord = getInputStatus(input, targetWord.length);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      const key = e.key.toLocaleLowerCase("tr");
-
+  const handleKeyInput = useCallback(
+    (key: string) => {
       if (TURKISH_CHARACTERS.includes(key) && input.length < targetWord.length) {
         setInput(input + key);
         return;
@@ -142,6 +142,28 @@ export const App = (): JSX.Element => {
     [input, setIsGameFinished, setInput, setSubmitted, submitted, targetWord, toast]
   );
 
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      handleKeyInput(e.key.toLocaleLowerCase("tr"));
+    },
+    [handleKeyInput]
+  );
+
+  const handleKeyPress = useCallback(
+    (button: string) => {
+      let key = button.toLocaleLowerCase('tr');
+
+      if (key === '↵') {
+        key = 'enter';
+      } else if (key === '←') {
+        key = 'backspace';
+      }
+      
+      handleKeyInput(key);
+    },
+    [handleKeyInput]
+  );
+
   useEffect(() => {
     if (!isGameFinished) {
       window.addEventListener("keydown", handleKeyDown);
@@ -161,8 +183,34 @@ export const App = (): JSX.Element => {
         words={[...submitted, ...(!isGameFinished ? [currentWord] : [])]}
       />
       <ButtonContainer>
-        {isGameFinished && <Button color="black" onClick={resetGameState}>New game</Button>}
+        {isGameFinished && (
+          <Button color="black" onClick={resetGameState}>
+            New game
+          </Button>
+        )}
       </ButtonContainer>
+      <KeyboardContainer>
+        <Keyboard
+          buttonTheme={[
+            {
+              class: "backspace-key",
+              buttons: "←",
+            },
+            {
+              class: "enter-key",
+              buttons: "↵",
+            },
+          ]}
+          layout={{
+            default: [
+              "Q W E R T Y U I O P Ğ Ü ←",
+              "A S D F G H J K L Ş İ",
+              "Z X C V B N M Ö Ç ↵",
+            ],
+          }}
+          onKeyPress={handleKeyPress}
+        />
+      </KeyboardContainer>
     </Container>
   );
 };
@@ -174,13 +222,40 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  gap: 48px;
   height: 100%;
   width: 100%;
 `;
 
 const ButtonContainer = styled.div`
-  margin-top: 48px;
   height: 40px;
+`;
+
+const KeyboardContainer = styled.div`
+  width: 600px;
+
+  span {
+    color: black;
+  }
+
+  .react-simple-keyboard {
+    background: transparent;
+  }
+
+  .hg-button {
+    background-color: #ededed;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .backspace-key {
+    width: 36px !important;
+  }
+
+  .enter-key {
+    width: 48px !important;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`

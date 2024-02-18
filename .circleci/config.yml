@@ -20,7 +20,7 @@ jobs:
           command: 'scp -oStrictHostKeyChecking=no -r ./dist/* $USER@$IP:/$TARGET_PATH'
       - run:
           name: 'Restart server'
-          command: 'ssh -oStrictHostKeyChecking=no -v $USER@$IP "$DEPLOY_SCRIPT_TAG"'
+          command: 'ssh -oStrictHostKeyChecking=no -v $USER@$IP "$DEPLOY_SCRIPT"'
 
 workflows:
   build-and-deploy: # This is the name of the workflow, feel free to change it to better match your workflow.

@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
-  build:
+  build-and-deploy:
     executor: node/default
     steps:
       - checkout
@@ -15,9 +15,19 @@ jobs:
       - run:
           name: 'Build application'
           command: 'yarn build'
+      - run:
+          name: 'Upload files'
+          command: 'scp -oStrictHostKeyChecking=no -r ./dist/* $USER@$IP:/$TARGET_PATH'
+      - run:
+          name: 'Restart server'
+          command: 'ssh -oStrictHostKeyChecking=no -v $USER@$IP "$DEPLOY_SCRIPT"'
 
 workflows:
   build-and-deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build
+      - build-and-deploy:
+          filters:
+            branches:
+              only:
+                - master

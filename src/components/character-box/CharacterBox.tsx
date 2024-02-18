@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
-export type CharacterStatus = "default" | "green" | "yellow";
+export type CharacterStatus = "default" | "green" | "gray" | "yellow";
 
 export const CHARACTER_BOX_SIZE = 48;
 
 export const CHARACTER_STATUS_COLOR: Record<CharacterStatus, string> = {
-  default: "darkgray",
+  default: "gray",
+  gray: "darkgray",
   green: "#25952d",
   yellow: "#ddcc4f",
 };

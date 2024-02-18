@@ -50,7 +50,7 @@ const TURKISH_CHARACTERS = [
 const getInputResult = (input: string, word: string): CharacterGridWord => {
   const statuses: CharacterStatus[] = new Array(word.length)
     .fill(0)
-    .map(() => "default");
+    .map(() => "gray");
 
   const secondPassWordSet = [];
 

@@ -1,4 +1,4 @@
-import { useToast } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { CharacterStatus } from "./components/character-box/CharacterBox";
@@ -89,6 +89,7 @@ export const App = (): JSX.Element => {
     isGameFinished,
     submitted,
     targetWord,
+    resetGameState,
     setInput,
     setIsGameFinished,
     setSubmitted,
@@ -159,6 +160,9 @@ export const App = (): JSX.Element => {
         columns={targetWord.length}
         words={[...submitted, ...(!isGameFinished ? [currentWord] : [])]}
       />
+      <ButtonContainer>
+        {isGameFinished && <Button color="black" onClick={resetGameState}>New game</Button>}
+      </ButtonContainer>
     </Container>
   );
 };
@@ -169,8 +173,14 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   height: 100%;
   width: 100%;
+`;
+
+const ButtonContainer = styled.div`
+  margin-top: 48px;
+  height: 40px;
 `;
 
 const GlobalStyle = createGlobalStyle`

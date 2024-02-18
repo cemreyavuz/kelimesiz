@@ -11,6 +11,7 @@ type GameState = {
 };
 
 type MutableGameState = GameState & {
+  resetGameState: () => void;
   setInput: (v: string) => void;
   setIsGameFinished: (v: boolean) => void;
   setSubmitted: (v: CharacterGridWord[]) => void;
@@ -61,8 +62,13 @@ export const useGameState = (length: number): MutableGameState => {
     [setValue]
   );
 
+  const resetGameState = useCallback(() => {
+    setValue(generateInitialGameState(length));
+  }, [length, setValue]);
+
   return {
     ...value,
+    resetGameState,
     setInput,
     setIsGameFinished,
     setSubmitted,

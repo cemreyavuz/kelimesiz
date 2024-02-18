@@ -1,16 +1,13 @@
+import { useToast } from "@chakra-ui/react";
+import { useCallback, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
+import { CharacterStatus } from "./components/character-box/CharacterBox";
 import {
   CharacterGrid,
   CharacterGridWord,
 } from "./components/character-grid/CharacterGrid";
-import { useCallback, useEffect, useState } from "react";
-import { CharacterStatus } from "./components/character-box/CharacterBox";
-import { getTodaysWord, isValidWord } from "./utils/word";
-import { useToast } from "@chakra-ui/react";
-
-const WORD = getTodaysWord(6).toLocaleLowerCase('tr');
-
-console.log(WORD);
+import { useGameState } from "./utils/game";
+import { isValidWord } from "./utils/word";
 
 const TURKISH_CHARACTERS = [
   "a",
@@ -87,37 +84,40 @@ const getInputStatus = (input: string, length: number): CharacterGridWord => {
 };
 
 export const App = (): JSX.Element => {
-  const [submitted, setSubmitted] = useState<CharacterGridWord[]>([]);
-  const [isGameFinished, setIsGameFinished] = useState(false);
-
-  const [input, setInput] = useState("");
+  const {
+    input,
+    isGameFinished,
+    submitted,
+    targetWord,
+    setInput,
+    setIsGameFinished,
+    setSubmitted,
+  } = useGameState(6);
 
   const toast = useToast();
 
-  const currentWord = getInputStatus(input, WORD.length);
+  const currentWord = getInputStatus(input, targetWord.length);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       const key = e.key.toLocaleLowerCase("tr");
 
-      if (TURKISH_CHARACTERS.includes(key) && input.length < WORD.length) {
-        setInput((prevInput) => prevInput + key);
+      if (TURKISH_CHARACTERS.includes(key) && input.length < targetWord.length) {
+        setInput(input + key);
         return;
       }
 
       if (key === "backspace" && input.length > 0) {
-        setInput((prevInput) => prevInput.slice(0, input.length - 1));
+        setInput(input.slice(0, input.length - 1));
         return;
       }
 
-      if (key === "enter" && input.length === WORD.length) {
+      if (key === "enter" && input.length === targetWord.length) {
         if (isValidWord(input)) {
-          setSubmitted((prevSubmitted) =>
-            prevSubmitted.concat(getInputResult(input, WORD))
-          );
+          setSubmitted(submitted.concat(getInputResult(input, targetWord)));
           setInput("");
 
-          if (input.toLocaleLowerCase("tr") === WORD.toLocaleLowerCase("tr")) {
+          if (input.toLocaleLowerCase("tr") === targetWord.toLocaleLowerCase("tr")) {
             setIsGameFinished(true);
             toast({
               title: `You found the answer: "${input}"`,
@@ -138,7 +138,7 @@ export const App = (): JSX.Element => {
 
       return;
     },
-    [input, toast]
+    [input, setIsGameFinished, setInput, setSubmitted, submitted, targetWord, toast]
   );
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export const App = (): JSX.Element => {
       <GlobalStyle />
       <CharacterGrid
         rows={6}
-        columns={WORD.length}
+        columns={targetWord.length}
         words={[...submitted, ...(!isGameFinished ? [currentWord] : [])]}
       />
     </Container>

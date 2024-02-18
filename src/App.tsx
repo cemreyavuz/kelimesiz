@@ -232,9 +232,9 @@ export const App = (): JSX.Element => {
           ]}
           layout={{
             default: [
-              "Q W E R T Y U I O P Ğ Ü ←",
+              "C E Y U I O P Ğ Ü ←",
               "A S D F G H J K L Ş İ",
-              "Z X C V B N M Ö Ç ↵",
+              "Z R T V B N M Ö Ç ↵",
             ],
           }}
           onKeyPress={handleKeyPress}
